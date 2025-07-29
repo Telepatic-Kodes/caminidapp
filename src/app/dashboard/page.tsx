@@ -5,6 +5,8 @@ import Link from 'next/link';
 import NotificationCenter from '@/components/NotificationCenter';
 import SearchBar from '@/components/SearchBar';
 import StatsChart from '@/components/StatsChart';
+import RealTimeMetrics from '@/components/RealTimeMetrics';
+import RealTimeNotifications from '@/components/RealTimeNotifications';
 
 // Definimos los tipos para los roles
 type UserRole = 'admin' | 'coordinator' | 'mentor' | 'director' | 'member';
@@ -176,12 +178,8 @@ export default function DashboardPage() {
               {/* Barra de búsqueda */}
               <SearchBar placeholder="Buscar miembros, proyectos..." />
               
-              {/* Centro de notificaciones */}
-              <NotificationCenter
-                notifications={notifications}
-                onMarkAsRead={handleMarkAsRead}
-                onDismiss={handleDismissNotification}
-              />
+              {/* Centro de notificaciones en tiempo real */}
+              <RealTimeNotifications />
               
               {/* Selector de rol */}
               <div className="flex items-center space-x-2">
@@ -214,6 +212,11 @@ export default function DashboardPage() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Métricas en tiempo real */}
+        <div className="mb-8">
+          <RealTimeMetrics />
+        </div>
+
         {/* Métricas principales */}
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
           {/* Total de miembros */}
@@ -437,7 +440,7 @@ export default function DashboardPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {permissions.canApproveMembers && (
                 <Link
-                  href="/registro"
+                  href="/miembros"
                   className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
                 >
                   <div className="w-8 h-8 bg-indigo-100 rounded-md flex items-center justify-center mr-3">
@@ -445,21 +448,9 @@ export default function DashboardPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                     </svg>
                   </div>
-                  <span className="text-sm font-medium text-gray-900">Agregar Miembro</span>
+                  <span className="text-sm font-medium text-gray-900">Gestionar Miembros</span>
                 </Link>
               )}
-
-              <Link
-                href="/proyectos"
-                className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                <div className="w-8 h-8 bg-green-100 rounded-md flex items-center justify-center mr-3">
-                  <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                  </svg>
-                </div>
-                <span className="text-sm font-medium text-gray-900">Ver Proyectos</span>
-              </Link>
 
               <Link
                 href="/eventos"
@@ -471,6 +462,30 @@ export default function DashboardPage() {
                   </svg>
                 </div>
                 <span className="text-sm font-medium text-gray-900">Gestionar Eventos</span>
+              </Link>
+
+              <Link
+                href="/pagos"
+                className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                <div className="w-8 h-8 bg-green-100 rounded-md flex items-center justify-center mr-3">
+                  <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                  </svg>
+                </div>
+                <span className="text-sm font-medium text-gray-900">Gestionar Pagos</span>
+              </Link>
+
+              <Link
+                href="/votaciones"
+                className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                <div className="w-8 h-8 bg-purple-100 rounded-md flex items-center justify-center mr-3">
+                  <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <span className="text-sm font-medium text-gray-900">Gestionar Votaciones</span>
               </Link>
 
               <Link
@@ -497,26 +512,31 @@ export default function DashboardPage() {
                 <span className="text-sm font-medium text-gray-900">Gestionar Recursos</span>
               </Link>
 
+              <Link
+                href="/portal"
+                className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                <div className="w-8 h-8 bg-blue-100 rounded-md flex items-center justify-center mr-3">
+                  <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </div>
+                <span className="text-sm font-medium text-gray-900">Portal de Miembros</span>
+              </Link>
+
               {permissions.canGenerateReports && (
-                <button className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                <Link
+                  href="/configuracion"
+                  className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                >
                   <div className="w-8 h-8 bg-yellow-100 rounded-md flex items-center justify-center mr-3">
                     <svg className="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM4 19h6v-2H4v2zM4 15h6v-2H4v2zM4 11h6V9H4v2zM4 7h6V5H4v2zM10 7h10V5H10v2zM10 11h10V9H10v2zM10 15h10v-2H10v2z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                   </div>
-                  <span className="text-sm font-medium text-gray-900">Generar Reporte</span>
-                </button>
-              )}
-
-              {permissions.canManageUsers && (
-                <button className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                  <div className="w-8 h-8 bg-red-100 rounded-md flex items-center justify-center mr-3">
-                    <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-                    </svg>
-                  </div>
-                  <span className="text-sm font-medium text-gray-900">Gestionar Usuarios</span>
-                </button>
+                  <span className="text-sm font-medium text-gray-900">Configuración</span>
+                </Link>
               )}
             </div>
           </div>
