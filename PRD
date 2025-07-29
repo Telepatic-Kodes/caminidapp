@@ -1,0 +1,123 @@
+# AIAIAI CommunityOS – *Demo Sprint* PRD v1.5
+
+*(Objetivo: demo en vivo este **viernes 1 agosto 2025** + showcase IA‑content & internal‑comms)*
+
+---
+
+## 1. Objetivo del Sprint (ampliado)
+
+Demostrar un **núcleo operativo** y, además, dos capacidades IA de alto impacto:
+
+1. **MVP de Creación de Contenido & Redes Sociales** (Content Studio + agentes).
+2. **Gestor de Comunicación Interna** con automatizaciones desde el onboarding hasta el accountability, sustentado en un **RAG** (Retrieval‑Augmented Generation) con estatutos y comunicaciones históricas.
+
+Nueva meta agregada:
+
+> **8. Enviar un mensaje onboarding personalizado y crear hilo de seguimiento “Accountability” automático al aprobar un nuevo miembro.**
+
+---
+
+## 2. Dolor → Módulo → Prioridad (actualizado)
+
+| Pri    | Dolor                               | Módulo (Epic)          | Deliverable MVP Sprint                   |
+| ------ | ----------------------------------- | ---------------------- | ---------------------------------------- |
+| **P0** | Info dispersa / sin visión 360°     | **CRM Core**           | Tabla `contacts`, timeline UI            |
+| **P0** | Ingreso y autenticación lenta       | **Onboarding & Auth**  | Magic Link + perfil                      |
+| **P0** | Necesidad de mostrar valor tangible | **Panel 360°**         | Card con datos, CTA "Crear Deal"         |
+| **P0** | Pipeline sponsors sin seguimiento   | **Patrocinios Kanban** | Board drag‑drop                          |
+| **P1** | Morosidad / pagos                   | **Cuota Sandbox**      | Stripe Test charge                       |
+| **P1** | Bajo engagement externo             | **Feed social básico** | Post + comment realtime                  |
+| **P1** | Tickets de soporte manuales         | **Service Desk**       | Ticket flow + email                      |
+| **P1** | **Creación contenido y RRSS**       | **Content Studio**     | Planner, IA copy + publish X/LinkedIn    |
+| **P1** | **Gestor Comunicación Interna**     | **Internal Comms**     | RAG, playbooks, auto‑flows               |
+| **P1** | **Escalado vía agentes IA**         | **Agent Framework**    | Agents: *Content*, *Engagement*, *Comms* |
+| **P2** | Falta métricas                      | **Dashboard KPI**      | MAU, deals Won                           |
+| **P2** | Gobernanza                          | **Votación rápida**    | Poll simple                              |
+
+---
+
+## 3. Alcance Funcional Detallado (adiciones)
+
+### 3.9 Content Studio (P1) *(sin cambios)*
+
+### 3.10 Internal Comms (P1)
+
+* **Objetivo**: Centralizar comunicaciones internas (e‑mail, Slack/WhatsApp) y ejecutar automatizaciones de ciclo de vida (onboarding, reminders, accountability).
+* **DB**: `comm_templates(id, trigger, channel, subject, body_markdown)` + `comm_logs(id, member_id, template_id, sent_at, channel)`.
+* **Automations**:
+
+  * **Trigger: Member Created →** Welcome pack + guía estatutos.
+  * **Trigger: 30 d después →** Encuesta satisfacción & tareas accountability.
+  * **Trigger: Evento agendado →** Recordatorio + seguimiento NPS 24 h post‑evento.
+* **RAG**:
+
+  * **Corpus**: Estatutos PDF, FAQs, circulares, newsletters.
+  * **Pipeline**: File → Text splitter → Embeddings (OpenAI ada‑002) → pgvector table `docs_embeddings`.
+  * **Query flow**: Agent Comms utiliza langchain `ConversationalRetrievalQA` para generar respuestas personalizadas en mensajes.
+* **UI**: Wizard “Crear Playbook” ( elegir trigger + canal + prompt IA ).
+
+### 3.11 Agent Framework (P1) *(extendido)*
+
+* **Agentes piloto**
+
+  * **Content Agent** – posts multi‑canal.
+  * **Engagement Agent** – reply suggestions.
+  * **Comms Agent** – usa RAG; si staff formula pregunta “/ask – estatutos” o programa un flujo, genera respuesta/mensaje listo.
+* **Governance**: Staff approvals por rol.
+
+---
+
+## 4. Cronograma Sprint (actualizado)
+
+| Día / Hora (CLT)   | Entregable clave                           | Responsable  |
+| ------------------ | ------------------------------------------ | ------------ |
+| Mar 29 – 14:00     | Scaffolding, DB, Auth                      | Dev Lead     |
+| Mar 29 – 22:00     | CRM + Panel 360°                           | Backend + FE |
+| Mié 30 – 12:00     | Patrocinios Kanban + seed                  | FE           |
+| **Mié 30 – 22:00** | **Content Studio backend + UI alpha**      | FS Dev       |
+| Jue 31 – 12:00     | Stripe charge, Service Desk                | Backend      |
+| **Jue 31 – 18:00** | **Internal Comms engine + RAG ingest**     | AI+BE        |
+| **Jue 31 – 20:00** | **Agentes IA: Content, Engagement, Comms** | AI Engineer  |
+| Vie 1 – 09:00      | Dashboard KPI, Votación opc.               | Data eng.    |
+| Vie 1 – 12:00      | Ensayo demo end‑to‑end                     | Todos        |
+| **Vie 1 – 15:00**  | DEMO en vivo con pilotos                   | PO           |
+
+---
+
+## 5. Criterios de Aceptación (añadidos)
+
+* **CA‑07**: Content Agent genera variantes; staff aprueba.
+* **CA‑08**: Post programado se publica y loggea.
+* **CA‑09**: Engagement Agent sugiere reply.
+* **CA‑10**: Comms Agent responde pregunta sobre estatuto con cita y link fuente.
+* **CA‑11**: Al crear miembro, Internal Comms envía e‑mail bienvenida y programa follow‑up.
+
+---
+
+## 6. Stack & Setup (añadidos)
+
+* **RAG**: Langchain `VectorStore` (Postgres pgvector) + OpenAI embeddings.
+* **Ingest**: n8n workflow para subir PDF/docx y procesar automáticamente.
+* **Comms Channels**: SendGrid (email), Slack webhook; WhatsApp (Twilio sandbox).
+* **Agent Orchestrator**: same `/apps/agents`.
+
+NPM deps extra:
+
+```bash
+pnpm add @langchain/community @langchain/openai sendgrid slack-sdk twilio
+```
+
+---
+
+## 7. Riesgos & Mitigación (extendido)
+
+| Riesgo                  | Impacto  | Plan                                  |
+| ----------------------- | -------- | ------------------------------------- |
+| Embeddings costo alto   | Bajo‑Med | Cache embeddings; cron update semanal |
+| Latencia consulta RAG   | Medio    | Limitar docs top‑k; streaming answer  |
+| Consentimiento WhatsApp | Medio    | Opt‑in previo, fallback email         |
+
+---
+
+> **v1.5 – 29 Jul 2025**  |  Cambio: se integra **Internal Comms** con RAG y Comms Agent, cronograma actualizado.
+> *Este PRD define el alcance final de la demo del 1 de agosto.*

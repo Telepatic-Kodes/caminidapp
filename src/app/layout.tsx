@@ -68,6 +68,24 @@ export default function RootLayout({
                   >
                     Configuración
                   </a>
+                  <a
+                    href="/content-studio"
+                    className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                  >
+                    Content Studio
+                  </a>
+                  <a
+                    href="/internal-comms"
+                    className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                  >
+                    Internal Comms
+                  </a>
+                  <a
+                    href="/agents"
+                    className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                  >
+                    Agents
+                  </a>
                 </div>
               </div>
               <div className="hidden sm:ml-6 sm:flex sm:items-center">
