@@ -1,5 +1,5 @@
 import Link from "next/link";
-// import SupabaseTest from "@/components/SupabaseTest";
+import SupabaseTest from "@/components/SupabaseTest";
 
 export default function Home() {
   return (
@@ -73,9 +73,9 @@ export default function Home() {
         </div>
 
         {/* Supabase Test */}
-        {/* <div className="mt-20">
+        <div className="mt-20">
           <SupabaseTest />
-        </div> */}
+        </div>
 
         {/* Features Section */}
         <div className="mt-20">

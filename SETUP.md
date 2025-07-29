@@ -1,107 +1,157 @@
-# 🚀 Configuración de Supabase para Comunidad Dashboard
+# Setup Guide - Comunidad Dashboard
 
-## 📋 Pasos para configurar la base de datos
+## 🚀 Quick Start
 
-### 1. Crear cuenta en Supabase
-
-1. Ve a [supabase.com](https://supabase.com)
-2. Haz clic en "Start your project"
-3. Regístrate con tu cuenta de Google
-4. Crea una nueva organización: "Comunidad para el Desarrollo"
-5. Crea un nuevo proyecto:
-   - **Nombre**: `comunidad-dashboard`
-   - **Contraseña de DB**: `Comunidad2024!` (guárdala)
-   - **Región**: `South America (São Paulo)`
-
-### 2. Configurar la base de datos
-
-1. Ve al **SQL Editor** en el dashboard de Supabase
-2. Copia y pega el contenido de `database/schema.sql`
-3. Ejecuta el script completo
-4. Verifica que se crearon las tablas en **Table Editor**
-
-### 3. Obtener credenciales
-
-1. Ve a **Settings** → **API**
-2. Copia:
-   - **Project URL** → `NEXT_PUBLIC_SUPABASE_URL`
-   - **anon public** → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-
-### 4. Configurar variables de entorno
-
-1. Crea un archivo `.env.local` en la raíz del proyecto
-2. Copia el contenido de `config/env.example`
-3. Reemplaza las credenciales con las reales de Supabase
-
+### 1. Install Dependencies
 ```bash
-# Ejemplo de .env.local
-NEXT_PUBLIC_SUPABASE_URL=https://tu-proyecto.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=tu-anon-key-aqui
+npm install
 ```
 
-### 5. Configurar autenticación
+### 2. Set Up Environment Variables
+Create a `.env.local` file in the root directory with the following variables:
 
-1. Ve a **Authentication** → **Providers**
-2. Habilita **Google** y configura:
-   - **Client ID**: (obtener de Google Cloud Console)
-   - **Client Secret**: (obtener de Google Cloud Console)
-3. Configura **Site URL**: `http://localhost:3000`
-4. Configura **Redirect URLs**: `http://localhost:3000/auth/callback`
+```env
+# Supabase Configuration (REQUIRED for database functionality)
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url_here
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key_here
 
-### 6. Probar la conexión
+# OpenAI Configuration (for AI features)
+OPENAI_API_KEY=your_openai_api_key_here
 
+# WhatsApp Cloud API (for notifications)
+WHATSAPP_TOKEN=your_whatsapp_token_here
+WHATSAPP_PHONE_NUMBER_ID=your_whatsapp_phone_number_id_here
+
+# SendGrid (for emails)
+SENDGRID_API_KEY=your_sendgrid_api_key_here
+
+# Stripe (for payments)
+STRIPE_SECRET_KEY=your_stripe_secret_key_here
+STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key_here
+```
+
+### 3. Set Up Supabase Database
+
+#### Step 1: Create a Supabase Project
+1. Go to [supabase.com](https://supabase.com)
+2. Create a new project
+3. Note down your project URL and anon key
+
+#### Step 2: Run the Database Schema
+1. Go to your Supabase project dashboard
+2. Navigate to the SQL Editor
+3. Copy and paste the contents of `database/schema.sql`
+4. Execute the script to create all tables and initial data
+
+#### Step 3: Configure Environment Variables
+Update your `.env.local` file with your Supabase credentials:
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+```
+
+### 4. Test the Database Connection
+1. Start the development server:
 ```bash
 npm run dev
 ```
 
-Ve a `http://localhost:3000` y verifica que no hay errores en la consola.
+2. Open your browser to `http://localhost:3000`
+3. Scroll down to the "Supabase Database Test" section
+4. Check the connection status:
+   - 🟢 Green: Connected to Supabase
+   - 🔴 Red: Using mock data (check your environment variables)
 
-## 🔧 Configuración adicional
+### 5. Test Database Operations
+1. Click "Load Members" to fetch data from the database
+2. Click "Add Test Member" to create a new member
+3. Verify that the operations work correctly
 
-### Políticas de seguridad (RLS)
+## 📚 Learning Path
 
-Las políticas básicas ya están configuradas en el schema. Puedes ajustarlas en:
-**Authentication** → **Policies**
+### Phase 1: Database Integration (Week 1-2)
+- ✅ Set up Supabase connection
+- ✅ Test database operations
+- 🔄 Connect registration form to database
+- 🔄 Update dashboard to use real data
 
-### Funciones de base de datos
+### Phase 2: Authentication & Authorization (Week 3-4)
+- 🔄 Implement user authentication
+- 🔄 Set up role-based access control
+- 🔄 Create protected routes
 
-El schema incluye:
-- Triggers para `updated_at`
-- Logging de actividad
-- Índices para performance
+### Phase 3: AI Integration (Week 5-6)
+- 🔄 Implement commission suggestion AI
+- 🔄 Add progress summarization
+- 🔄 Create activity scoring
 
-## 📊 Estructura de la base de datos
+### Phase 4: Automation & Notifications (Week 7-8)
+- 🔄 Set up n8n workflows
+- 🔄 Implement WhatsApp notifications
+- 🔄 Create email automation
 
-### Tablas principales:
+## 🛠️ Development Commands
 
-1. **`commissions`** - Comisiones temáticas
-2. **`members`** - Miembros de la comunidad
-3. **`projects`** - Proyectos por comisión
-4. **`payments`** - Sistema de pagos
-5. **`activity_logs`** - Auditoría de cambios
+```bash
+# Start development server
+npm run dev
 
-### Relaciones:
+# Build for production
+npm run build
 
-- `members.commission_id` → `commissions.id`
-- `projects.commission_id` → `commissions.id`
-- `payments.member_id` → `members.id`
+# Start production server
+npm start
 
-## 🚨 Troubleshooting
+# Run linting
+npm run lint
+```
 
-### Error: "Invalid API key"
-- Verifica que las credenciales en `.env.local` sean correctas
-- Asegúrate de que el archivo `.env.local` esté en la raíz del proyecto
+## 📁 Project Structure
 
-### Error: "Table does not exist"
-- Ejecuta el script SQL completo en Supabase
-- Verifica que todas las tablas se crearon correctamente
+```
+src/
+├── app/                    # Next.js app router pages
+│   ├── dashboard/         # Dashboard page
+│   ├── registro/          # Registration page
+│   ├── proyectos/         # Projects page
+│   └── api/              # API routes
+├── components/            # Reusable React components
+├── lib/                   # Utility functions and configurations
+│   ├── supabase.ts       # Database configuration
+│   └── mockData.ts       # Mock data for development
+└── types/                 # TypeScript type definitions
+```
 
-### Error de autenticación
-- Verifica la configuración de Google OAuth
-- Asegúrate de que las URLs de redirección estén configuradas
+## 🔧 Troubleshooting
 
-## 📚 Recursos adicionales
+### Database Connection Issues
+1. Verify your Supabase URL and anon key are correct
+2. Check that the database schema has been applied
+3. Ensure your Supabase project is active
+4. Check the browser console for error messages
 
-- [Documentación de Supabase](https://supabase.com/docs)
-- [Guía de autenticación](https://supabase.com/docs/guides/auth)
-- [Row Level Security](https://supabase.com/docs/guides/auth/row-level-security) 
+### Environment Variables Not Loading
+1. Make sure `.env.local` is in the root directory
+2. Restart the development server after adding environment variables
+3. Verify variable names start with `NEXT_PUBLIC_` for client-side access
+
+### TypeScript Errors
+1. Run `npm run lint` to check for issues
+2. Make sure all imports are correct
+3. Check that type definitions match your database schema
+
+## 🎯 Next Steps
+
+Once you have the database connection working:
+
+1. **Update the Registration Form**: Connect it to save real data to Supabase
+2. **Enhance the Dashboard**: Load real data instead of mock data
+3. **Add Authentication**: Implement user login/logout functionality
+4. **Create API Routes**: Build backend endpoints for data operations
+
+## 📖 Learning Resources
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Supabase Documentation](https://supabase.com/docs)
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/)
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs) 
