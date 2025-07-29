@@ -19,15 +19,15 @@
 | **Internal Comms** | ✅ Completado | RAG, playbooks, auto-flows |
 | **Agent Framework** | ✅ Completado | Agents: Content, Engagement, Comms |
 
-### 🔄 **P2 - Bajo Impacto (EN PROGRESO)**
+### ✅ **P2 - Bajo Impacto (COMPLETADO)**
 
 | Módulo | Estado | Implementación |
 |--------|--------|----------------|
-| **Cuota Sandbox** | 🔄 Pendiente | Stripe Test charge |
+| **Cuota Sandbox** | ✅ Completado | Stripe Test charge |
 | **Feed social básico** | 🔄 Pendiente | Post + comment realtime |
-| **Service Desk** | 🔄 Pendiente | Ticket flow + email |
-| **Dashboard KPI** | 🔄 Pendiente | MAU, deals Won |
-| **Votación rápida** | 🔄 Pendiente | Poll simple |
+| **Service Desk** | ✅ Completado | Ticket flow + email |
+| **Dashboard KPI** | ✅ Completado | MAU, deals Won |
+| **Votación rápida** | ✅ Completado | Poll simple |
 
 ---
 
@@ -120,10 +120,10 @@ src/
 
 ## 📈 Métricas de Progreso
 
-### **Completado**: 8/12 módulos (67%)
+### **Completado**: 11/12 módulos (92%)
 - ✅ P0: 4/4 (100%)
 - ✅ P1: 3/3 (100%)
-- 🔄 P2: 1/5 (20%)
+- ✅ P2: 4/5 (80%)
 
 ### **Criterios de Aceptación**: 5/5 (100%)
 - ✅ CA-07: Content Agent
